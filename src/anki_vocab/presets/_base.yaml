@@ -285,7 +285,7 @@ note_type:
 
       '
     back: "{{FrontSide}}\n<hr id=\"answer\">\n<div class=\"term fr\">{{term_target}}</div>\n<div class=\"\
-      audio-playback\">{{audio}}</div>\n<div class=\"ipa\">[{{ipa}}]</div>\n{{#gender}}<div class=\"gender\"\
+      audio-playback\">{{audio}}</div>\n<div class=\"ipa\">{{ipa}}</div>\n{{#gender}}<div class=\"gender\"\
       >{{gender}}</div>{{/gender}}\n{{#register}}<div class=\"register\">{{register}}</div>{{/register}}\n\
       {{#construction}}<div class=\"construction\">{{construction}}</div>{{/construction}}\n\n<div class=\"\
       section\">\n  <div class=\"titre\">[[definition]]</div>\n  <div class=\"contenu\">{{definition}}</div>\n\
@@ -315,7 +315,7 @@ note_type:
       '
     back: "{{FrontSide}}\n<hr id=\"answer\">\n<div class=\"term\">{{term_source}}</div>\n{{#sense_hint}}<div\
       \ class=\"hint-sense\">({{sense_hint}})</div>{{/sense_hint}}\n<div class=\"audio-playback\">{{audio}}</div>\n\
-      <div class=\"ipa\">[{{ipa}}]</div>\n{{#gender}}<div class=\"gender\">{{gender}}</div>{{/gender}}\n\
+      <div class=\"ipa\">{{ipa}}</div>\n{{#gender}}<div class=\"gender\">{{gender}}</div>{{/gender}}\n\
       {{#register}}<div class=\"register\">{{register}}</div>{{/register}}\n{{#construction}}<div class=\"\
       construction\">{{construction}}</div>{{/construction}}\n\n<div class=\"section\">\n  <div class=\"\
       titre\">[[definition]]</div>\n  <div class=\"contenu\">{{definition}}</div>\n</div>\n\n{{#literal}}\n\
@@ -345,7 +345,7 @@ note_type:
       '
     back: "{{FrontSide}}\n<hr id=\"answer\">\n<div class=\"term fr\">{{term_target}}</div>\n<div class=\"\
       term\">{{term_source}}</div>\n{{#sense_hint}}<div class=\"hint-sense\">({{sense_hint}})</div>{{/sense_hint}}\n\
-      <div class=\"audio-playback\">{{audio}}</div>\n<div class=\"ipa\">[{{ipa}}]</div>\n{{#gender}}<div\
+      <div class=\"audio-playback\">{{audio}}</div>\n<div class=\"ipa\">{{ipa}}</div>\n{{#gender}}<div\
       \ class=\"gender\">{{gender}}</div>{{/gender}}\n{{#register}}<div class=\"register\">{{register}}</div>{{/register}}\n\
       {{#construction}}<div class=\"construction\">{{construction}}</div>{{/construction}}\n\n<div class=\"\
       section\">\n  <div class=\"titre\">[[definition]]</div>\n  <div class=\"contenu\">{{definition}}</div>\n\
