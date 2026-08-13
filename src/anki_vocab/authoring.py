@@ -295,7 +295,8 @@ def to_yaml(name: str, spec: dict[str, Any], source_code: str, target_code: str)
     if qid:
         out.append(f"  lingualibre_qid: {qid}")
     articles = spec.get("strip_articles") or []
-    out.append(f"  strip_articles: [{', '.join(f'\"{a}\"' for a in articles)}]")
+    quoted = ", ".join('"' + a + '"' for a in articles)
+    out.append(f"  strip_articles: [{quoted}]")
 
     out += ["", "labels:"]
     out += [f"  {k}: {v}" for k, v in spec["labels"].items()]
