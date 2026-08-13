@@ -1,0 +1,42 @@
+# anki-vocab — starting point for your own settings.
+#
+# Copy this to config.yaml and edit it. Everything the project owns (prompts,
+# lexical schema, field mapping, card template) comes from the preset below and
+# does not belong here.
+
+# Language pair. `anki-vocab --list-presets` shows what is available.
+preset: es-fr
+
+anki:
+  url: http://localhost:8765
+  default_profile: main
+
+  # Deck and note type to write to. `anki-vocab --init` creates them if they
+  # do not exist yet, using the card template from the preset.
+  profiles:
+    main:
+      deck: "French"
+      note_type: "French v1"
+
+  duplicate_check:
+    enabled: true
+
+llm:
+  model: gpt-5.6-luna
+  strict_schema: true      # force the model to match the schema exactly
+  # reasoning_effort: none # optional; omit to let the model decide
+  # max_output_tokens: 4096
+
+audio:
+  sources: [lingualibre, openai_tts]
+  tts_model: gpt-4o-mini-tts
+  voice: alloy
+  format: mp3
+  speed: 1.1               # 0.25–4.0, default 1.0
+  # instructions: Speak at a natural conversational pace.   # gpt-4o-mini-tts only
+  user_agent: "anki-vocab (your-email@example.com)"
+  timeout: 10
+
+  # Anki stores its own copy of every clip, so nothing is kept locally.
+  # Set a path here only if you want a second copy outside Anki.
+  # archive_dir: ~/Music/anki-audio

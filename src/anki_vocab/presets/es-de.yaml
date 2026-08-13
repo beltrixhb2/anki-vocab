@@ -1,0 +1,136 @@
+# Spanish → German.
+#
+# Shows how short a language pair becomes once the shared parts live in
+# _base.yaml: the two languages, the category names, the morphology German
+# actually has, and the words for the card headings. No field map, no card
+# templates, no CSS — those are inherited.
+
+extends: _base
+
+languages:
+  source:
+    name: Spanish
+    code: es
+  target:
+    name: German
+    code: de
+    wikidata_qid: Q188
+
+audio:
+  lingualibre_qid: Q188
+  strip_articles: ["der ", "die ", "das ", "ein ", "eine "]
+
+# Card headings. The ones naming target-language content are in German; the two
+# that explain things to the learner stay in Spanish.
+labels:
+  definition: Definition
+  example: Beispiel
+  example_2: Beispiel 2
+  forms: Formen
+  conjugation: Konjugation
+  literal: Literalmente
+  false_friend: Falso amigo
+  usage: Uso
+  listen: hören
+
+prompt:
+  source_language_reminder: |
+    Recuerda: sense_hint, false_friend y usage_note van en español.
+
+  prompt_extra: |
+    Priorities specific to this pair:
+    - For nouns, always give the gender as its definite article, plus the
+      plural. Gender is not guessable and governs every declension.
+    - Record what the term governs: the preposition AND the case it takes.
+      "warten auf + Akkusativ", "denken an + Akkusativ", "helfen + Dativ".
+      {source_name} speakers get these wrong constantly, so fill it whenever
+      the term takes anything at all.
+    - For verbs, give the auxiliary (haben/sein), the Partizip II and the
+      preterite. Strong verbs are irregular in all three and cannot be guessed.
+    - Flag false friends. Fill it only when the trap is real.
+    - Fill sense_hint whenever a learner seeing only the {source_name} side could
+      reasonably answer with a different {target_name} word.
+    - Give variant forms only when they DIFFER from the entry.
+
+schema:
+  term_target:
+    description: >-
+      Word or phrase in {target_name}, with its definite article for nouns
+      ('der Hund'). For verbs use the infinitive, and keep separable verbs
+      whole: 'anrufen', not 'rufen an'.
+  ipa:
+    description: >-
+      IPA transcription of the WHOLE {target_name} term, wrapped in slashes:
+      /ˈhʊnt/. Mark the primary stress with ˈ — in German it is meaningful and
+      often falls on a prefix. Use ʁ for the r.
+  pos:
+    description: Grammatical category, in {target_name}.
+    enum:
+      - Substantiv
+      - Verb
+      - Adjektiv
+      - Adverb
+      - Pronomen
+      - Präposition
+      - Konjunktion
+      - Interjektion
+      - Redewendung
+      - Sprichwort
+      - Artikel
+      - Numerale
+      - Partikel
+      - Abkürzung
+  gender:
+    description: >-
+      Gender of the noun, given as its definite article. Leave empty for
+      anything that is not a noun.
+    enum: ["", "der", "die", "das", "immer Plural"]
+  register:
+    enum: ["", "umgangssprachlich", "salopp", "derb", "vulgär", "gehoben", "dichterisch", "fachsprachlich"]
+  construction:
+    description: >-
+      What the term governs: the preposition AND the case, or the complement.
+      'warten auf + Akkusativ', 'helfen + Dativ', 'sich erinnern an + Akk'.
+      Naming the case matters as much as naming the preposition. Fill it
+      whenever the term takes anything at all.
+  forms:
+    description: >-
+      Noun forms that DIFFER from the entry, each with its article. Omit
+      entirely for verbs, adverbs and invariable words.
+    properties:
+      plural: Plural with its article ('die Hunde'), if it applies.
+      genitiv: Genitive singular with its article, when it is irregular.
+  conjugation:
+    description: >-
+      Conjugation, for verbs only. Omit entirely for anything else. Give the
+      verb form ONLY, never the subject pronoun: 'gehe', not 'ich gehe'.
+    properties:
+      hilfsverb: >-
+        The auxiliary for the perfect, 'haben' or 'sein'. Verbs of motion and
+        of change of state take 'sein' — gehen, fahren, kommen, werden,
+        bleiben, sterben. Do not default to 'haben'.
+      partizip_ii: Partizip II.
+      ich: "Present tense, 'ich' form, without the subject pronoun."
+      du: "Present tense, 'du' form, without the subject pronoun."
+      er_sie_es: "Present tense, 'er/sie/es' form, without the subject pronoun."
+      wir: "Present tense, 'wir' form, without the subject pronoun."
+      ihr: "Present tense, 'ihr' form, without the subject pronoun."
+      sie_Sie: "Present tense, 'sie/Sie' form, without the subject pronoun."
+      praeteritum_ich: "Preterite, 'ich' form — irregular in every strong verb."
+
+rendered:
+  forms:
+    rows:
+      - {path: plural, label: "Plural"}
+      - {path: genitiv, label: "Genitiv"}
+  conjugation:
+    rows:
+      - {path: hilfsverb, label: "Hilfsverb"}
+      - {path: partizip_ii, label: "Partizip II"}
+      - {path: ich, label: "ich"}
+      - {path: du, label: "du"}
+      - {path: er_sie_es, label: "er/sie/es"}
+      - {path: wir, label: "wir"}
+      - {path: ihr, label: "ihr"}
+      - {path: sie_Sie, label: "sie/Sie"}
+      - {path: praeteritum_ich, label: "Präteritum — ich"}

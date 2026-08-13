@@ -1,0 +1,400 @@
+# Shared base for every language pair. Not selectable on its own — the
+# leading underscore keeps it out of --list-presets. A language preset says
+# `extends: _base` and then states only what differs: the two languages, the
+# category names, the morphology it has, and the words for the card headings.
+#
+# Everything here is pair-independent: the field map, the card layout, the
+# CSS, the thematic tags and every field description that does not mention a
+# specific grammar.
+
+anki:
+  timeout: 15
+  duplicate_check:
+    field: term_source
+audio:
+  text_field: term_target
+  filename_template: '{target_code}_{term_target}_{term_source}'
+  example:
+    sources:
+    - openai_tts
+    text_field: example_target
+    filename_template: '{target_code}_ex_{term_target}'
+prompt:
+  system: 'You are an expert bilingual lexicographer ({source_name}-{target_name})
+
+    writing flashcards for a {source_name} speaker learning {target_name}.
+
+
+    LANGUAGE RULE, BEFORE ANYTHING ELSE. Exactly three fields are written in
+
+    {source_name}: sense_hint, false_friend and usage_note. They are the
+
+    learner''s own language and they exist to explain the card. Every other
+
+    field is in {target_name}.
+
+    [[source_language_reminder]]
+
+
+    Fill every field that genuinely applies and leave out the ones that do not.
+
+    Accuracy matters more than completeness: an empty field is better than an
+
+    invented one.
+
+
+    [[prompt_extra]]
+
+
+    Before you answer, reread sense_hint, false_friend and usage_note. You have
+
+    been working in {target_name} throughout, so any of them may have come out
+
+    in {target_name} by inertia. Rewrite those in {source_name}.
+
+    [[source_language_reminder]]
+
+
+    Return only the requested JSON object, with no commentary.
+
+    '
+  user: 'Generate the bilingual lexical entry for the word or phrase:
+
+    ''{word}''.{translation_clause}{context_clause}
+
+    '
+schema:
+  term_source:
+    type: string
+    required: true
+    description: 'Word or phrase in {source_name}, with its article where applicable (''el libro'', ''la
+      mesa''). Just the term: the disambiguator goes in pista, and the preposition it governs in construction.'
+  sense_hint:
+    type: string
+    description: 'WRITE THIS FIELD IN {source_name}, never in {target_name}. Two or three
+
+      words that disambiguate the {source_name} term. They are shown on the FRONT
+
+      of the card, next to it. Fill it whenever the {source_name} term on its own
+
+      could be answered with more than one {target_name} word, because the learner
+
+      sees only the front and cannot otherwise know which one is being asked for.
+
+      Leave it empty when the term has one obvious translation, which is the
+
+      common case.
+
+      {source_language_reminder}'
+  term_target:
+    type: string
+    required: true
+    description: 'Word or phrase in {target_name}, with its article where applicable (''le livre'', ''la
+      table'', ''l''eau''). For a plain verb, use the infinitive. For locutions, idioms and sentence frames,
+      KEEP the phrase in the form it is actually spoken: ''Je doute que...'' stays in the first person,
+      and must not be reduced to the infinitive ''douter que''. Mirror the form the user typed rather
+      than normalising it.'
+  ipa:
+    type: string
+    required: true
+    description: 'IPA transcription of the WHOLE {target_name} term, wrapped in slashes: /lə livʁ/. Rules
+      that are easy to get wrong: transcribe the article too when the term carries one, since the elision
+      and the liaison are exactly what is hard to hear (''les épices'' is /lez‿epis/, not /epis/); use
+      ʁ for the French r, never r or ʀ; use œ and œ̃, never ɶ or ũ; do not write stress marks, French
+      has no lexical stress; and drop the final consonant only when it really is silent (''l''avis'' is
+      /la.vi/, not /la.vis/) — a consonant followed by a final -e IS pronounced, so ''les courses'' is
+      /le kuʁs/ and ''petite'' is /pətit/.'
+  pos:
+    type: string
+    required: true
+    description: Grammatical category or type of expression, in {target_name}. Use 'marqueur de discours'
+      for the phrases that open or frame an opinion — 'À mon avis, ...', 'Il me semble que...', 'D'après
+      moi, ...' — rather than forcing them into 'locution adverbiale'.
+  gender:
+    type: string
+    description: Grammatical gender, for nouns and noun phrases only. Essential when the article is elided
+      ("l'eau", "l'étage") and the gender is invisible. Leave empty for anything that is not a noun.
+  register:
+    type: string
+    description: Level of language. Only state it when it is NOT neutral — knowing that "bouffer" is familiar
+      is what keeps you from using it in the wrong place.
+  definition:
+    type: string
+    required: true
+    description: Definition of the term, written in {target_name}.
+  construction:
+    type: string
+    description: 'What the term governs, written as a pattern with qqn/qqch: ''penser à qqch'', ''prendre
+      soin de qqn'', ''se souvenir de qqch'', ''douter que + subjonctif'', ''espérer que + indicatif''.
+      Fill it whenever the term takes a preposition, a complement or a mood. Leave empty only when it
+      takes nothing at all.'
+  literal:
+    type: string
+    description: 'Word-for-word reading in {source_name}, for idioms and proverbs whose literal sense
+      differs from their meaning: ''il pleut des cordes'' → ''llueve cuerdas''. Leave empty for anything
+      that is not figurative.'
+  false_friend:
+    type: string
+    description: 'WRITE THIS FIELD IN {source_name}, never in {target_name}. A short warning,
+
+      only when a {source_name} word looks or sounds like this one but means
+
+      something else. Say what each of the two really means. Leave it empty when
+
+      there is no real trap.
+
+      {source_language_reminder}'
+  usage_note:
+    type: string
+    description: 'WRITE THIS FIELD IN {source_name}, never in {target_name}. A short note on
+
+      nuance or on when the term is used: the situation it belongs to, what it is
+
+      NOT used for, a pronunciation trap, or a mistake {source_name} speakers make
+
+      habitually. Leave it empty when there is nothing worth warning about.
+
+      {source_language_reminder}'
+  example_target:
+    type: string
+    required: true
+    description: A natural sentence in {target_name} using the term, showing the construction above where
+      there is one.
+  example_source:
+    type: string
+    required: true
+    description: The first example translated into {source_name}.
+  example_2_target:
+    type: string
+    description: A second sentence in {target_name}, in a clearly different context or sense from the
+      first. Leave empty if it would only repeat it.
+  example_2_source:
+    type: string
+    description: The second example translated into {source_name}.
+  synonyms:
+    type: array
+    items: string
+    description: 'Up to three {target_name} words that could genuinely replace the term in the same sentence
+      and the same register. A merely related word is not a synonym: ''malade'' and ''grippé'' are not
+      synonyms of ''enrhumé'', they are a broader word and a different illness. If nothing is truly close,
+      return an empty list — that is the honest answer and it is common.'
+  antonyms:
+    type: array
+    items: string
+    description: Up to two opposites in {target_name}. Empty if the term has none.
+  forms:
+    type: object
+    description: 'Inflected forms that DIFFER from the entry. Write each one WITH its article, exactly
+      the way the entry is written: ''les chiens'', not ''chiens''. The article is what makes the gender
+      and the number visible, which is the whole point of this table. Never repeat the headword. Use `pluriel`
+      for words that do not inflect for gender; use the gendered fields for those that do, and then leave
+      `pluriel` empty. Omit entirely for verbs, adverbs and invariable words.'
+    properties: {}
+  conjugation:
+    type: object
+    description: 'Conjugation, for verbs only. Omit entirely for anything else. Give the verb form ONLY,
+      never the subject pronoun: ''mange'', not ''je mange''. The card already labels each row with its
+      pronoun. Pronominal verbs keep their reflexive pronoun, because it is part of the form: ''me souviens''.'
+    properties: {}
+  tags:
+    type: array
+    required: true
+    description: One to three tags from the fixed list, chosen for what the term means, not for its grammar.
+      Prefer the most specific ones that genuinely apply; it is better to return one accurate tag than
+      three vague ones. Never invent a tag outside the list.
+    items:
+      type: string
+      enum:
+      - tema::animales
+      - tema::plantas
+      - tema::alimentación
+      - tema::cocina
+      - tema::casa
+      - tema::ropa
+      - tema::cuerpo
+      - tema::salud
+      - tema::familia
+      - tema::relaciones
+      - tema::emociones
+      - tema::carácter
+      - tema::trabajo
+      - tema::educación
+      - tema::dinero
+      - tema::compras
+      - tema::ciudad
+      - tema::naturaleza
+      - tema::clima
+      - tema::viajes
+      - tema::transporte
+      - tema::tiempo
+      - tema::deporte
+      - tema::ocio
+      - tema::arte
+      - tema::tecnología
+      - tema::comunicación
+      - tema::sociedad
+      - tema::ciencia
+      - tema::colores
+      - tema::cantidades
+      - tema::movimiento
+      - tema::percepción
+      - tema::pensamiento
+      - tema::cortesía
+      - tema::cualidades
+field_map:
+  term_source: term_source
+  sense_hint: sense_hint
+  term_target: term_target
+  audio: audio
+  ipa: ipa
+  pos: pos
+  gender: gender
+  register: register
+  definition: definition
+  construction: construction
+  literal: literal
+  false_friend: false_friend
+  usage_note: usage_note
+  example_target: example_target
+  example_source: example_source
+  example_audio: example_audio
+  example_2_target: example_2_target
+  example_2_source: example_2_source
+  synonyms: synonyms
+  antonyms: antonyms
+rendered:
+  forms:
+    from: forms
+    rows: []
+  conjugation:
+    from: conjugation
+    rows: []
+card_gates:
+  recognition: _card_recognition
+  listening: _card_listening
+tags_from: tags
+omit_if_same_as: term_target
+note_type:
+  cards:
+  - name: Production
+    front: '<div class="term">{{term_source}}</div>
+
+      {{#sense_hint}}<div class="hint-sense">({{sense_hint}})</div>{{/sense_hint}}
+
+      <div class="pos">{{pos}}</div>
+
+      '
+    back: "{{FrontSide}}\n<hr id=\"answer\">\n<div class=\"term fr\">{{term_target}}</div>\n<div class=\"\
+      audio-playback\">{{audio}}</div>\n<div class=\"ipa\">[{{ipa}}]</div>\n{{#gender}}<div class=\"gender\"\
+      >{{gender}}</div>{{/gender}}\n{{#register}}<div class=\"register\">{{register}}</div>{{/register}}\n\
+      {{#construction}}<div class=\"construction\">{{construction}}</div>{{/construction}}\n\n<div class=\"\
+      section\">\n  <div class=\"titre\">[[definition]]</div>\n  <div class=\"contenu\">{{definition}}</div>\n\
+      </div>\n\n{{#literal}}\n<div class=\"section\">\n  <div class=\"titre\">[[literal]]</div>\n  <div\
+      \ class=\"contenu\">{{literal}}</div>\n</div>\n{{/literal}}\n\n<div class=\"section\">\n  <div class=\"\
+      titre\">[[example]] {{example_audio}}</div>\n  <div class=\"contenu\">{{example_target}}<span class=\"\
+      es\">{{example_source}}</span></div>\n</div>\n\n{{#example_2_target}}\n<div class=\"section\">\n\
+      \  <div class=\"titre\">[[example_2]]</div>\n  <div class=\"contenu\">{{example_2_target}}<span\
+      \ class=\"es\">{{example_2_source}}</span></div>\n</div>\n{{/example_2_target}}\n\n{{#false_friend}}\n\
+      <div class=\"section warn\">\n  <div class=\"titre\">[[false_friend]]</div>\n  <div class=\"contenu\"\
+      >{{false_friend}}</div>\n</div>\n{{/false_friend}}\n\n{{#usage_note}}\n<div class=\"section note\"\
+      >\n  <div class=\"titre\">[[usage]]</div>\n  <div class=\"contenu\">{{usage_note}}</div>\n</div>\n\
+      {{/usage_note}}\n\n{{#forms}}\n<div class=\"section\">\n  <div class=\"titre\">[[forms]]</div>\n\
+      \  <div class=\"contenu\">{{forms}}</div>\n</div>\n{{/forms}}\n\n{{#conjugation}}\n<div class=\"\
+      section\">\n  <div class=\"titre\">[[conjugation]]</div>\n  <div class=\"contenu\">{{conjugation}}</div>\n\
+      </div>\n{{/conjugation}}\n\n{{#synonyms}}<div class=\"lexical\"><b>&asymp;</b> {{synonyms}}</div>{{/synonyms}}\n\
+      {{#antonyms}}<div class=\"lexical\"><b>&ne;</b> {{antonyms}}</div>{{/antonyms}}\n"
+  - name: Recognition
+    front: '{{#_card_recognition}}
+
+      <div class="term fr">{{term_target}}</div>
+
+      <div class="pos">{{pos}}</div>
+
+      {{/_card_recognition}}
+
+      '
+    back: "{{FrontSide}}\n<hr id=\"answer\">\n<div class=\"term\">{{term_source}}</div>\n{{#sense_hint}}<div\
+      \ class=\"hint-sense\">({{sense_hint}})</div>{{/sense_hint}}\n<div class=\"audio-playback\">{{audio}}</div>\n\
+      <div class=\"ipa\">[{{ipa}}]</div>\n{{#gender}}<div class=\"gender\">{{gender}}</div>{{/gender}}\n\
+      {{#register}}<div class=\"register\">{{register}}</div>{{/register}}\n{{#construction}}<div class=\"\
+      construction\">{{construction}}</div>{{/construction}}\n\n<div class=\"section\">\n  <div class=\"\
+      titre\">[[definition]]</div>\n  <div class=\"contenu\">{{definition}}</div>\n</div>\n\n{{#literal}}\n\
+      <div class=\"section\">\n  <div class=\"titre\">[[literal]]</div>\n  <div class=\"contenu\">{{literal}}</div>\n\
+      </div>\n{{/literal}}\n\n<div class=\"section\">\n  <div class=\"titre\">[[example]] {{example_audio}}</div>\n\
+      \  <div class=\"contenu\">{{example_target}}<span class=\"es\">{{example_source}}</span></div>\n\
+      </div>\n\n{{#example_2_target}}\n<div class=\"section\">\n  <div class=\"titre\">[[example_2]]</div>\n\
+      \  <div class=\"contenu\">{{example_2_target}}<span class=\"es\">{{example_2_source}}</span></div>\n\
+      </div>\n{{/example_2_target}}\n\n{{#false_friend}}\n<div class=\"section warn\">\n  <div class=\"\
+      titre\">[[false_friend]]</div>\n  <div class=\"contenu\">{{false_friend}}</div>\n</div>\n{{/false_friend}}\n\
+      \n{{#usage_note}}\n<div class=\"section note\">\n  <div class=\"titre\">[[usage]]</div>\n  <div\
+      \ class=\"contenu\">{{usage_note}}</div>\n</div>\n{{/usage_note}}\n\n{{#forms}}\n<div class=\"section\"\
+      >\n  <div class=\"titre\">[[forms]]</div>\n  <div class=\"contenu\">{{forms}}</div>\n</div>\n{{/forms}}\n\
+      \n{{#conjugation}}\n<div class=\"section\">\n  <div class=\"titre\">[[conjugation]]</div>\n  <div\
+      \ class=\"contenu\">{{conjugation}}</div>\n</div>\n{{/conjugation}}\n\n{{#synonyms}}<div class=\"\
+      lexical\"><b>&asymp;</b> {{synonyms}}</div>{{/synonyms}}\n{{#antonyms}}<div class=\"lexical\"><b>&ne;</b>\
+      \ {{antonyms}}</div>{{/antonyms}}\n"
+  - name: Listening
+    front: '{{#_card_listening}}
+
+      <div class="listen">{{audio}}</div>
+
+      <div class="hint">[[listen]]</div>
+
+      {{/_card_listening}}
+
+      '
+    back: "{{FrontSide}}\n<hr id=\"answer\">\n<div class=\"term fr\">{{term_target}}</div>\n<div class=\"\
+      term\">{{term_source}}</div>\n{{#sense_hint}}<div class=\"hint-sense\">({{sense_hint}})</div>{{/sense_hint}}\n\
+      <div class=\"audio-playback\">{{audio}}</div>\n<div class=\"ipa\">[{{ipa}}]</div>\n{{#gender}}<div\
+      \ class=\"gender\">{{gender}}</div>{{/gender}}\n{{#register}}<div class=\"register\">{{register}}</div>{{/register}}\n\
+      {{#construction}}<div class=\"construction\">{{construction}}</div>{{/construction}}\n\n<div class=\"\
+      section\">\n  <div class=\"titre\">[[definition]]</div>\n  <div class=\"contenu\">{{definition}}</div>\n\
+      </div>\n\n{{#literal}}\n<div class=\"section\">\n  <div class=\"titre\">[[literal]]</div>\n  <div\
+      \ class=\"contenu\">{{literal}}</div>\n</div>\n{{/literal}}\n\n<div class=\"section\">\n  <div class=\"\
+      titre\">[[example]] {{example_audio}}</div>\n  <div class=\"contenu\">{{example_target}}<span class=\"\
+      es\">{{example_source}}</span></div>\n</div>\n\n{{#example_2_target}}\n<div class=\"section\">\n\
+      \  <div class=\"titre\">[[example_2]]</div>\n  <div class=\"contenu\">{{example_2_target}}<span\
+      \ class=\"es\">{{example_2_source}}</span></div>\n</div>\n{{/example_2_target}}\n\n{{#false_friend}}\n\
+      <div class=\"section warn\">\n  <div class=\"titre\">[[false_friend]]</div>\n  <div class=\"contenu\"\
+      >{{false_friend}}</div>\n</div>\n{{/false_friend}}\n\n{{#usage_note}}\n<div class=\"section note\"\
+      >\n  <div class=\"titre\">[[usage]]</div>\n  <div class=\"contenu\">{{usage_note}}</div>\n</div>\n\
+      {{/usage_note}}\n\n{{#forms}}\n<div class=\"section\">\n  <div class=\"titre\">[[forms]]</div>\n\
+      \  <div class=\"contenu\">{{forms}}</div>\n</div>\n{{/forms}}\n\n{{#conjugation}}\n<div class=\"\
+      section\">\n  <div class=\"titre\">[[conjugation]]</div>\n  <div class=\"contenu\">{{conjugation}}</div>\n\
+      </div>\n{{/conjugation}}\n\n{{#synonyms}}<div class=\"lexical\"><b>&asymp;</b> {{synonyms}}</div>{{/synonyms}}\n\
+      {{#antonyms}}<div class=\"lexical\"><b>&ne;</b> {{antonyms}}</div>{{/antonyms}}\n"
+  css: ".card { font-family: -apple-system, \"Helvetica Neue\", Arial, sans-serif;\n        font-size:\
+    \ 20px; text-align: center;\n        color: #202124; background-color: #ffffff; }\n\n.term { font-size:\
+    \ 30px; font-weight: bold; margin-bottom: 6px; }\n.term.fr { color: #000080; }\n.pos { font-size:\
+    \ 16px; color: #6b6b6b; margin-bottom: 4px; }\n.hint-sense { font-size: 17px; color: #8a6d3b; margin-bottom:\
+    \ 4px; }\n.gender { font-size: 16px; color: #a4508b; font-weight: bold; }\n.register { font-size:\
+    \ 14px; color: #6b6b6b; font-style: italic; }\n.ipa { font-size: 18px; color: #444; }\n.audio-playback\
+    \ { margin: 6px 0; }\n.listen { font-size: 40px; margin: 24px 0 8px; }\n.hint { font-size: 14px; color:\
+    \ #9aa0a6; letter-spacing: .12em;\n        text-transform: uppercase; }\n\n.construction { display:\
+    \ inline-block; margin: 10px auto;\n                font-family: \"Courier New\", Courier, monospace;\
+    \ font-size: 17px;\n                background-color: #eef3ff; color: #17408b;\n                border:\
+    \ 1px solid #c9d9f7; border-radius: 4px; padding: 5px 10px; }\n\n.section { margin: 14px 0; text-align:\
+    \ left; border: 1px solid #eee;\n           padding: 10px; border-radius: 5px; background-color: #f9f9f9;\
+    \ }\n.titre { font-weight: bold; font-size: 16px; color: #333; margin-bottom: 5px; }\n.contenu { font-size:\
+    \ 18px; line-height: 1.45; color: #333; }\n.contenu .es { display: block; color: #6b6b6b; font-size:\
+    \ 16px; }\n\n.warn { border-color: #f0c7a0; background-color: #fdf5ec; }\n.warn .titre { color: #9c5a12;\
+    \ }\n.note { border-color: #d8e6c8; background-color: #f4f9ee; }\n.note .titre { color: #4a6b2a; }\n\
+    \n.grid { border-collapse: collapse; font-family: \"Courier New\", Courier, monospace;\n        font-size:\
+    \ 16px; }\n.grid th { text-align: right; padding: 2px 10px 2px 0; color: #6b6b6b;\n           font-weight:\
+    \ normal; white-space: nowrap; }\n.grid td { text-align: left; padding: 2px 0; color: #111; }\n\n\
+    .lexical { font-size: 15px; color: #555; margin-top: 4px; }\n.lexical b { color: #333; }\n\nhr#answer\
+    \ { border: 0; height: 1px; margin: 20px 0;\n            background-image: linear-gradient(to right,\
+    \ rgba(0,0,0,0),\n                              rgba(0,0,0,.6), rgba(0,0,0,0)); }\n\n/* Anki's night\
+    \ mode. The old note type forced black-on-white and became\n   unreadable there, so every colour above\
+    \ is restated for the dark theme. */\n.nightMode.card { color: #e8eaed; background-color: #2f2f31;\
+    \ }\n.nightMode .term.fr { color: #8ab4f8; }\n.nightMode .pos, .nightMode .register, .nightMode .grid\
+    \ th { color: #9aa0a6; }\n.nightMode .hint-sense { color: #e0c088; }\n.nightMode .ipa { color: #bdc1c6;\
+    \ }\n.nightMode .gender { color: #e0a3d0; }\n.nightMode .section { border-color: #4a4a4d; background-color:\
+    \ #3a3a3d; }\n.nightMode .titre { color: #e8eaed; }\n.nightMode .contenu { color: #e0e2e6; }\n.nightMode\
+    \ .contenu .es, .nightMode .lexical { color: #9aa0a6; }\n.nightMode .lexical b { color: #c7c9cd; }\n\
+    .nightMode .grid td { color: #e8eaed; }\n.nightMode .construction { background-color: #26364f; color:\
+    \ #a9c7ff;\n                           border-color: #3a5280; }\n.nightMode .warn { border-color:\
+    \ #6b4a22; background-color: #3d3226; }\n.nightMode .warn .titre { color: #f0b978; }\n.nightMode .note\
+    \ { border-color: #47603a; background-color: #2f3a2a; }\n.nightMode .note .titre { color: #a8cf85;\
+    \ }\n.nightMode hr#answer { background-image: linear-gradient(to right,\n                       rgba(255,255,255,0),\
+    \ rgba(255,255,255,.5), rgba(255,255,255,0)); }\n"

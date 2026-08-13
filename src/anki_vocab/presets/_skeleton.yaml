@@ -1,0 +1,76 @@
+# {name}: <source language> → <target language>.
+#
+# Everything shared lives in _base.yaml — the field map, the card layout, the
+# CSS, the thematic tags. Fill in the blanks below and you have a working pair.
+# Delete any section you have nothing to change in.
+#
+#   anki-vocab --preset {name} --profile <your profile> --init
+
+extends: _base
+
+languages:
+  source:
+    name: Spanish          # written into the prompts, so use the English name
+    code: es
+  target:
+    name: TODO
+    code: TODO             # two-letter code, used in audio file names
+
+audio:
+  # Wikidata Q-ID of the target language, for native recordings from Lingua
+  # Libre. French Q150, German Q188, English Q1860, Italian Q652,
+  # Portuguese Q5146, Russian Q7737, Japanese Q5287. Remove the whole key to
+  # skip Lingua Libre and always synthesize.
+  lingualibre_qid: TODO
+  # Leading strings to retry without, because Lingua Libre records bare words.
+  # Empty list for a language without articles.
+  strip_articles: []
+
+# Card headings. Those naming target-language content go in the target
+# language; literal, false_friend and usage explain things to the learner, so
+# they stay in the source language.
+labels:
+  definition: TODO
+  example: TODO
+  example_2: TODO
+  forms: TODO
+  conjugation: TODO
+  literal: Literalmente
+  false_friend: Falso amigo
+  usage: Uso
+  listen: TODO
+
+prompt:
+  prompt_extra: |
+    Priorities specific to this pair:
+    - TODO: what {source_name} speakers get wrong in {target_name}. False
+      friends, a preposition that does not match, a gender that is not
+      guessable, a tense that is irregular.
+
+schema:
+  pos:
+    # Category names as they should appear on the card, in the target language.
+    enum: [TODO]
+  gender:
+    # Delete both lines below if the language has no grammatical gender.
+    enum: ["", TODO]
+  register:
+    enum: ["", TODO]
+  forms:
+    # The inflected forms this language has. Delete the whole block if none.
+    properties:
+      TODO: Description of this form.
+  conjugation:
+    # Delete the whole block if the language does not conjugate.
+    properties:
+      TODO: Description of this form.
+
+rendered:
+  # How the two blocks above appear on the card. One row per property, in the
+  # order you want them shown; empty rows are dropped automatically.
+  forms:
+    rows:
+      - {path: TODO, label: "TODO"}
+  conjugation:
+    rows:
+      - {path: TODO, label: "TODO"}

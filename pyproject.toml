@@ -1,0 +1,52 @@
+[project]
+name = "anki-vocab"
+version = "0.2.0"
+description = "Generate bilingual vocabulary entries with AI and add them to Anki via AnkiConnect"
+license = "MIT"
+keywords = ["anki", "flashcards", "language-learning", "vocabulary", "openai"]
+authors = [{ name = "Beltrán Hidalgo Batalla" }]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Education",
+    "Topic :: Utilities",
+]
+
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31",
+    "openai>=3.0,<4",   # 3.0 moved from httpx to httpx2
+    "jsonschema>=4.21",
+    "python-dotenv>=1.0",
+    "PyYAML>=6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/beltranhidalgo/anki-vocab"
+Issues = "https://github.com/beltranhidalgo/anki-vocab/issues"
+
+[project.scripts]
+anki-vocab = "anki_vocab.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/anki_vocab"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "httpx2>=2.0",   # the transport the tests mock; openai 3 uses it
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

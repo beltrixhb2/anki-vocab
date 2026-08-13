@@ -1,0 +1,34 @@
+# Secrets: never commit the API key
+.env
+
+# Python environments and build artifacts
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Personal configuration (start from templates/)
+config.local.yaml
+
+# Downloaded and generated audio
+audio_archive/
+*.aac
+*.mp3
+*.wav
+*.opus
+*.flac
+
+# Logs
+*.log
+
+# OS and editor
+.DS_Store
+.vscode/
+.idea/
+
+.pytest_cache/
+
+dist/
+config.yaml

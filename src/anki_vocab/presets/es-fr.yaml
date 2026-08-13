@@ -1,0 +1,198 @@
+# Spanish → French.
+#
+# Everything shared with the other pairs lives in _base.yaml: the field map, the
+# card layout, the CSS, the thematic tags and most field descriptions. This file
+# only states what makes French French.
+
+extends: _base
+
+languages:
+  source:
+    name: Spanish
+    code: es
+  target:
+    name: French
+    code: fr
+    wikidata_qid: Q150
+
+audio:
+  lingualibre_qid: Q150
+  # Lingua Libre records bare words: if "le livre" is not found, it retries
+  # with "livre". Reflexive pronouns are deliberately left alone
+  # ("se marier" is not the same word as "marier").
+  strip_articles: ["le ", "la ", "les ", "l'", "l’", "un ", "une ", "des ", "du "]
+
+# Card headings. The ones naming target-language content are written in the
+# target language; the two that explain things to the learner are in Spanish.
+labels:
+  definition: Définition
+  example: Exemple
+  example_2: Exemple 2
+  forms: Formes
+  conjugation: Conjugaison
+  literal: Literalmente
+  false_friend: Falso amigo
+  usage: Uso
+  listen: écoute
+
+prompt:
+  source_language_reminder: |
+    Recuerda: sense_hint, false_friend y usage_note van en español.
+
+  prompt_extra: |
+    Priorities specific to this pair:
+    - Give the article with every noun, and state the gender explicitly. A
+      speaker cannot infer the gender of "l'eau" or "l'étage" from the article.
+    - Record what the term governs: the preposition, the complement, or the
+      mood that follows it. "penser à qqch", "prendre soin de qqn", "douter que
+      + subjonctif". This is where {source_name} speakers make the most
+      mistakes, so fill it whenever the term takes anything at all.
+    - Flag false friends: pairs that look alike across the two languages but do
+      not mean the same. Fill it only when the trap is real.
+    - For verbs, the auxiliary and the past participle matter more than the
+      present tense, and irregular future and subjunctive stems cannot be
+      guessed. Give them. Pronominal verbs always take 'être'. Give conjugated
+      forms without the subject pronoun, since the card labels each row.
+    - For idioms and proverbs, give the literal reading as well as the meaning:
+      it is what makes the expression memorable.
+    - Adapt to what the term IS. A single word gets its inflected forms and,
+      for verbs, its conjugation. A fixed phrase ('le grain de beauté', 'faire
+      la grasse matinée') is one lexical unit: keep it whole, do not conjugate
+      it, and put in construction whatever it governs. A discourse marker
+      ('À mon avis, ...', 'Je doute que...') keeps its trailing ellipsis and
+      its person; its definition states what it is FOR, not what it means, and
+      its construction states the mood that follows.
+    - Fill sense_hint whenever a learner seeing only the {source_name} side could
+      reasonably answer with a different {target_name} word. It is the only
+      clue they get before answering.
+    - Give variant forms only when they DIFFER from the entry, and write each
+      one with its article the same way the entry is written ('les chiens', not
+      'chiens'). Never repeat the headword as its own variant.
+
+schema:
+  ipa:
+    description: >-
+      IPA transcription of the WHOLE {target_name} term, wrapped in slashes:
+      /lə livʁ/. Rules that are easy to get wrong: transcribe the article too
+      when the term carries one, since the elision and the liaison are exactly
+      what is hard to hear ('les épices' is /lez‿epis/, not /epis/); use ʁ for
+      the French r, never r or ʀ; use œ and œ̃, never ɶ or ũ; do not write
+      stress marks, French has no lexical stress; and drop the final consonant
+      only when it really is silent ('l'avis' is /la.vi/, not /la.vis/) —
+      a consonant followed by a final -e IS pronounced, so 'les courses' is
+      /le kuʁs/ and 'petite' is /pətit/.
+  pos:
+    description: >-
+      Grammatical category or type of expression, in {target_name}. Use
+      'marqueur de discours' for the phrases that open or frame an opinion —
+      'À mon avis, ...', 'Il me semble que...', 'D'après moi, ...' — rather
+      than forcing them into 'locution adverbiale'.
+    enum:
+      - nom commun
+      - verbe
+      - adjectif
+      - adverbe
+      - pronom
+      - préposition
+      - conjonction
+      - interjection
+      - locution nominale
+      - locution verbale
+      - locution adjectivale
+      - locution adverbiale
+      - expression idiomatique
+      - marqueur de discours
+      - proverbe
+      - article
+      - déterminant
+      - numéral
+      - particule
+      - formule de politesse
+      - onomatopée
+      - sigle/acronyme
+  gender:
+    description: >-
+      Grammatical gender, for nouns and noun phrases only. Essential when the
+      article is elided ("l'eau", "l'étage") and the gender is invisible.
+      Leave empty for anything that is not a noun.
+    enum: ["", "masculin", "féminin", "masculin ou féminin", "toujours pluriel"]
+  register:
+    enum: ["", "courant", "familier", "populaire", "argot", "vulgaire", "soutenu", "littéraire", "technique"]
+  construction:
+    description: >-
+      What the term governs, written as a pattern with qqn/qqch: 'penser à
+      qqch', 'prendre soin de qqn', 'se souvenir de qqch', 'douter que +
+      subjonctif', 'espérer que + indicatif'. Fill it whenever the term takes a
+      preposition, a complement or a mood. Leave empty only when it takes
+      nothing at all.
+  forms:
+    description: >-
+      Inflected forms that DIFFER from the entry. Write each one WITH its
+      article, exactly the way the entry is written: 'les chiens', not
+      'chiens'. The article is what makes the gender and the number visible,
+      which is the whole point of this table. Never repeat the headword. Use
+      `pluriel` for words that do not inflect for gender; use the gendered
+      fields for those that do, and then leave `pluriel` empty. Omit entirely
+      for verbs, adverbs and invariable words.
+    properties:
+      masculin_singulier: >-
+        Masculine singular, ONLY if it differs from the entry itself. When the
+        entry already is the masculine singular, leave this empty.
+      devant_voyelle: >-
+        The special masculine form used before a vowel or a mute h, for the
+        handful of adjectives that have one: beau becomes 'bel' in 'un bel
+        homme', vieux becomes 'vieil', nouveau becomes 'nouvel'. This is NOT
+        the masculine singular, so never put it in that field. Leave empty for
+        every word without such a form, which is almost all of them.
+      masculin_pluriel: Masculine plural with its article, if it differs from the entry.
+      féminin_singulier: Feminine singular with its article, if it differs from the entry.
+      féminin_pluriel: Feminine plural with its article, if it differs from the entry.
+      pluriel: Plural with its article, for words that do not inflect for gender.
+  conjugation:
+    description: >-
+      Conjugation, for verbs only. Omit entirely for anything else. Give the
+      verb form ONLY, never the subject pronoun: 'mange', not 'je mange'. The
+      card already labels each row with its pronoun. Pronominal verbs keep
+      their reflexive pronoun, because it is part of the form: 'me souviens'.
+    properties:
+      auxiliaire: >-
+        The auxiliary for compound tenses, 'avoir' or 'être'. Every pronominal
+        (reflexive) verb takes 'être' without exception — 'se souvenir' gives
+        'je me suis souvenu'. So do aller, venir, partir, sortir, entrer,
+        monter, descendre, rester, tomber, naître, mourir, arriver, retourner
+        and their compounds. Do not default to 'avoir'.
+      participe_passé: Past participle.
+      je: "Present indicative, 'je' form, without the subject pronoun."
+      tu: "Present indicative, 'tu' form, without the subject pronoun."
+      il_elle_on: "Present indicative, 'il/elle/on' form, without the subject pronoun."
+      nous: "Present indicative, 'nous' form, without the subject pronoun."
+      vous: "Present indicative, 'vous' form, without the subject pronoun."
+      ils_elles: "Present indicative, 'ils/elles' form, without the subject pronoun."
+      futur_je: >-
+        Future simple, 'je' form, without the subject pronoun. The stem is
+        irregular in many verbs, which is why it is worth recording.
+      subjonctif_je: >-
+        Present subjunctive, 'que je' form, without the 'que' and without the
+        subject pronoun.
+
+rendered:
+  forms:
+    rows:
+      - {path: masculin_singulier, label: "masc. sing."}
+      - {path: devant_voyelle, label: "devant voyelle"}
+      - {path: masculin_pluriel, label: "masc. plur."}
+      - {path: féminin_singulier, label: "fém. sing."}
+      - {path: féminin_pluriel, label: "fém. plur."}
+      - {path: pluriel, label: "pluriel"}
+  conjugation:
+    rows:
+      - {path: auxiliaire, label: "auxiliaire"}
+      - {path: participe_passé, label: "participe passé"}
+      - {path: je, label: "je"}
+      - {path: tu, label: "tu"}
+      - {path: il_elle_on, label: "il/elle/on"}
+      - {path: nous, label: "nous"}
+      - {path: vous, label: "vous"}
+      - {path: ils_elles, label: "ils/elles"}
+      - {path: futur_je, label: "futur — je"}
+      - {path: subjonctif_je, label: "subj. — que je"}
