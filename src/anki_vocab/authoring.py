@@ -313,9 +313,17 @@ def to_yaml(name: str, spec: dict[str, Any], source_code: str, target_code: str)
         f"  pos:{_indent_enum(spec['pos_enum'])}",
     ]
 
-    # An empty list means the language lacks it; a null drops the field.
+    # An empty list means the language lacks the thing entirely. Dropping the
+    # schema field is not enough: _base also maps it to an Anki field and, for
+    # the two blocks, renders it. Both references have to go with it.
+    unmapped, unrendered = [], []
+
     for key, values in (("gender", spec["gender_enum"]), ("register", spec["register_enum"])):
-        out.append(f"  {key}:{_indent_enum(values)}" if values else f"  {key}:")
+        if values:
+            out.append(f"  {key}:{_indent_enum(values)}")
+        else:
+            out.append(f"  {key}:")
+            unmapped.append(key)
 
     for key, desc, fields in (
         ("forms", spec["forms_description"], spec["forms_fields"]),
@@ -323,11 +331,17 @@ def to_yaml(name: str, spec: dict[str, Any], source_code: str, target_code: str)
     ):
         if not fields:
             out.append(f"  {key}:")
+            unrendered.append(key)
             continue
         out.append(f"  {key}:\n    description: {_block(desc, 6)}\n    properties:")
         out += [f"      {f['key']}: {_block(f['description'], 8)}" for f in fields]
 
-    out += [f"  tags:\n    items:\n      enum:{_seq(spec['tags'], 8)}", "", "rendered:"]
+    out.append(f"  tags:\n    items:\n      enum:{_seq(spec['tags'], 8)}")
+
+    if unmapped:
+        out += ["", "field_map:"] + [f"  {key}:" for key in unmapped]
+
+    out += ["", "rendered:"] + [f"  {key}:" for key in unrendered]
     for key, fields in (("forms", spec["forms_fields"]), ("conjugation", spec["conjugation_fields"])):
         if not fields:
             continue

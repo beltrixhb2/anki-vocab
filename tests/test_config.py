@@ -267,3 +267,58 @@ def test_a_blank_preset_loads(monkeypatch, write_config):
         assert yaml.safe_load(path.read_text(encoding="utf-8"))["extends"] == "_base"
     finally:
         path.unlink()
+
+
+# --- Drafted presets -------------------------------------------------------
+
+
+def _spec(**overrides):
+    """A minimal preset spec, as the model would return it."""
+    spec = {
+        "source_name": "Spanish", "target_name": "Mandarin", "wikidata_qid": "Q9192",
+        "strip_articles": [], "source_language_reminder": "Recuerda: en español.",
+        "labels": {k: k for k in ("definition", "example", "example_2", "forms",
+                                  "conjugation", "literal", "false_friend", "usage", "listen")},
+        "pos_enum": ["名词", "动词"], "gender_enum": [], "register_enum": [],
+        "term_target_description": "The term in Mandarin.",
+        "ipa_description": "Pinyin, in slashes.",
+        "construction_description": "What it governs.",
+        "forms_description": "Forms.", "forms_fields": [],
+        "conjugation_description": "Conjugation.", "conjugation_fields": [],
+        "prompt_extra": "Priorities specific to this pair:\n- Tones.",
+        "tags": ["tema::animales", "tema::casa"],
+    }
+    spec.update(overrides)
+    return spec
+
+
+def test_a_language_without_gender_or_inflection_still_loads(write_config, tmp_path):
+    """Dropping a schema field must drop what _base maps and renders too."""
+    from anki_vocab import authoring
+
+    path = tmp_path / "es-zh.yaml"
+    path.write_text(authoring.to_yaml("es-zh", _spec(), "es", "zh"), encoding="utf-8")
+
+    cfg = config_mod.load(write_config(), preset=str(path))
+    schema = cfg.json_schema()["properties"]
+    for absent in ("gender", "register", "forms", "conjugation"):
+        assert absent not in schema
+        assert absent not in cfg.field_map
+        assert absent not in cfg.rendered
+    assert "term_target" in schema and "tags" in schema
+
+
+def test_a_drafted_preset_keeps_what_the_language_does_have(write_config, tmp_path):
+    from anki_vocab import authoring
+
+    spec = _spec(
+        gender_enum=["", "der", "die"],
+        conjugation_fields=[{"key": "past", "label": "Past", "description": "Past tense."}],
+    )
+    path = tmp_path / "es-xx.yaml"
+    path.write_text(authoring.to_yaml("es-xx", spec, "es", "xx"), encoding="utf-8")
+
+    cfg = config_mod.load(write_config(), preset=str(path))
+    assert cfg.json_schema()["properties"]["gender"]["enum"] == ["", "der", "die"]
+    assert "conjugation" in cfg.rendered and "forms" not in cfg.rendered
+    assert cfg.field_map["gender"] == "gender" and "register" not in cfg.field_map
