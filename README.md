@@ -6,15 +6,15 @@
 </p>
 
 <p align="center">
-  <img src="docs/images/card-back.png" alt="A generated card, back side" width="520">
+  <img src="docs/images/card-back.png" alt="The back of a generated card" width="420">
 </p>
 
 ```bash
-$ anki-vocab "el perro"
+$ anki-vocab maleta
 ```
 
 <p align="center">
-  <img src="docs/images/terminal.png" alt="Terminal output" width="640">
+  <img src="docs/images/terminal.png" alt="Terminal output for a single run" width="720">
 </p>
 
 Most vocabulary tools give you a translation. A translation is the easy half. What
@@ -35,7 +35,7 @@ Get Add-ons*, code `2055492159`, then restart Anki) and an
 ```bash
 uv tool install anki-vocab     # or: pipx install anki-vocab
 anki-vocab --setup             # asks for the key, the pair, the deck
-anki-vocab "el perro"          # your first card
+anki-vocab maleta              # your first card
 ```
 
 `--setup` walks through it, checks the key works, writes
@@ -71,7 +71,7 @@ pair, see [Adding a language](#adding-a-language).
 
 ```bash
 anki-vocab "la vela" -c "objeto que da luz"   # disambiguate
-anki-vocab "el perro" --dry-run               # preview, write nothing
+anki-vocab maleta --dry-run                   # preview, write nothing
 anki-vocab -f words.txt --validate            # a batch, confirming each
 ```
 
@@ -94,10 +94,17 @@ Every command below then becomes `uv run anki-vocab ...`.
 
 ## What ends up on the card
 
+You are shown the term in your own language, with a hint only when it is
+ambiguous:
+
 <p align="center">
-  <img src="docs/images/card-front.png" alt="Front side" width="320">
-  &nbsp;&nbsp;
-  <img src="docs/images/card-back-full.png" alt="Back side" width="320">
+  <img src="docs/images/card-front.png" alt="The front of a card" width="600">
+</p>
+
+And you answer with everything the word actually needs:
+
+<p align="center">
+  <img src="docs/images/card-back-full.png" alt="The back of the same card" width="420">
 </p>
 
 One note carries 24 fields. Nothing is padded: a field with no honest content stays
